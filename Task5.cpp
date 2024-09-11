@@ -3,6 +3,7 @@
 #include <string.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <conio.h>
 
 #define MAX_NAME_LENGTH 50
 #define MAX_FACULTY_LENGTH 100
@@ -56,6 +57,44 @@ Student* findStudent(Student* head, const char* lastName, const char* firstName)
     return NULL;
 }
 
+void findStudentsByFirstName(Student* head, const char* firstName) {
+    Student* current = head;
+    int found = 0;
+    while (current != NULL) {
+        if (strcmp(current->firstName, firstName) == 0) {
+            if (!found) {
+                printf("Студенты с именем %s:\n", firstName);
+                found = 1;
+            }
+            printStudent(current);
+            printf("\n");
+        }
+        current = current->next;
+    }
+    if (!found) {
+        printf("Студенты с именем %s не найдены.\n", firstName);
+    }
+}
+
+void findStudentsByLastName(Student* head, const char* lastName) {
+    Student* current = head;
+    int found = 0;
+    while (current != NULL) {
+        if (strcmp(current->lastName, lastName) == 0) {
+            if (!found) {
+                printf("Студенты с фамилией %s:\n", lastName);
+                found = 1;
+            }
+            printStudent(current);
+            printf("\n");
+        }
+        current = current->next;
+    }
+    if (!found) {
+        printf("Студенты с фамилией %s не найдены.\n", lastName);
+    }
+}
+
 void freeList(Student* head) {
     Student* current = head;
     while (current != NULL) {
@@ -97,19 +136,43 @@ int main() {
     char searchLastName[MAX_NAME_LENGTH];
     char searchFirstName[MAX_NAME_LENGTH];
 
-    printf("Введите фамилию студента для поиска: ");
-    scanf("%s", searchLastName);
-    printf("Введите имя студента для поиска: ");
-    scanf("%s", searchFirstName);
+    printf("\n\nВыберите операцию : \n");
+    printf("1. Поиск студента по имени и фамилии \n");
+    printf("2. Поиск студентов по имени \n");
+    printf("3. Поиск студентов по фамилии \n\n");
 
-    Student* foundStudent = findStudent(head, searchLastName, searchFirstName);
+    char operation = _getch();
 
-    if (foundStudent != NULL) {
-        printf("Студент найден:\n");
-        printStudent(foundStudent);
+    if (operation == '1') {
+        printf("\nВведите фамилию студента для поиска: ");
+        scanf("%s", searchLastName);
+        printf("Введите имя студента для поиска: ");
+        scanf("%s", searchFirstName);
+
+        Student* foundStudent = findStudent(head, searchLastName, searchFirstName);
+
+        if (foundStudent != NULL) {
+            printf("Студент найден:\n");
+            printStudent(foundStudent);
+        }
+        else {
+            printf("Студент не найден.\n");
+        }
     }
+    else if (operation == '2') {
+        printf("\n\nВведите имя студента для поиска: ");
+        scanf("%s", searchFirstName);
+        findStudentsByFirstName(head, searchFirstName);
+    }
+
+    else if (operation == '3') {
+        printf("\n\nВведите фамилию студента для поиска: ");
+        scanf("%s", searchLastName);
+        findStudentsByLastName(head, searchLastName);
+    }
+
     else {
-        printf("Студент не найден.\n");
+        printf("\n\nНеверный выбор операции.\n");
     }
 
     freeList(head);
